@@ -1,5 +1,6 @@
 // https://msdn.microsoft.com/en-us/library/aa289150(v=vs.71).aspx
 /* eslint-disable */
+const Queue = require('./queue-helper');
 class BinarySearchTree {
   constructor(value) {
     this.value = value;
@@ -10,19 +11,16 @@ class BinarySearchTree {
   // assigns it to either the left or right subtree,
   // depending on its value
   insert(value) {
-    if (this.value === null) {
-      const newNode = new BinarySearchTree(value);
-    }
-
+    const newNode = new BinarySearchTree(value);
     if (value < this.value) {
       if (!this.left) {
-        this.left = new BinarySearchTree(value);
+        this.left = newNode;
       } else {
         this.left.insert(value);
       }
-    } else if (value > this.right) {
+    } else {
       if (!this.right) {
-        this.right = new BinarySearchTree(value);
+        this.right = newNode;
       } else {
         this.right.insert(value);
       }
@@ -46,8 +44,10 @@ class BinarySearchTree {
   // Traverses the tree in a depth-first manner, i.e. from top to bottom
   // Applies the given callback to each tree node in the process
   depthFirstForEach(cb) {
-    this.left.depthFirstForEach(cb);
-    this.right.depthFirstForEach(cb);
+    if (this.value !== null) cb(this.value);
+
+    if (this.left) this.left.depthFirstForEach(cb);
+    if (this.right) this.right.depthFirstForEach(cb);
   }
   // Traverses the tree in a breadth-first manner, i.e. in layers, starting 
   // at the root node, going down to the root node's children, and iterating
@@ -56,7 +56,18 @@ class BinarySearchTree {
   // You'll need the queue-helper file for this. Or could you roll your own queue
   // again. Whatever floats your boat.
   breadthFirstForEach(cb) {
-
+    let queue = new Queue();
+    queue.enqueue(this);
+    while (!queue.isEmpty()) {
+      const nodeDeq = queue.dequeue();
+      if (nodeDeq.left) {
+        queue.enqueue(nodeDeq.left);
+      }
+      if (nodeDeq.right) {
+        queue.enqueue(nodeDeq.right);
+      }
+      cb(nodeDeq.value);
+    }
   }
 }
 
