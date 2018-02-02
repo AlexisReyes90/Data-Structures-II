@@ -54,6 +54,10 @@ class Graph {
   // Checks all the vertices of the graph for the target value
   // Returns true or false
   contains(value) {
+    if (this.vertices.indexOf(value) === -1) {
+      return false;
+    }
+    return true;
 
   }
   // Checks the graph to see if a GraphNode with the specified value exists in the graph 
@@ -68,14 +72,15 @@ class Graph {
   // Note: You'll need to store references to each vertex's array of edges so that you can use 
   // array methods on said arrays. There is no method to traverse the edge arrays built into the GraphNode class
   checkIfEdgeExists(fromVertex, toVertex) {
-
+    return (fromVertex.edges.includes(toVertex) && toVertex.edges.includes(fromVertex));
   }
   // Adds an edge between the two given vertices if no edge already exists between them
   // Again, an edge means both vertices reference the other 
   addEdge(fromVertex, toVertex) {
-    fromVertex.pushToEdges(toVertex);
-    toVertext.pushToEdges(fromVertex);
-    
+    if (!checkIfEdgeExists(fromVertex, toVertex)) {
+      fromVertex.pushToEdges(toVertex);
+      toVertext.pushToEdges(fromVertex);
+    }
   }
   // Removes the edge between the two given vertices if an edge already exists between them
   // After removing the edge, neither vertex should be referencing the other

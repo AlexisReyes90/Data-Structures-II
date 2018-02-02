@@ -16,10 +16,10 @@ class Tree {
   // have been checked
   contains(value) {
     if (this.value === value) return true;
-    for(let i = 0; i < this.children.length; i++) {
-      if (this.children[i].contains(value)) return true;
-    }
-    return false; // DFS
+    const searchChild = this.children;
+    searchChild.forEach((child) => {
+      if (value === child.value) return true;
+    });
   }
 }
 
